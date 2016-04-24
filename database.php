@@ -25,6 +25,8 @@
     foreach($result as $row){
         echo "<h3>" . $i . ". " . $row['name'] . " " . $row['score'] . "</h3>";
         $i++;
+        if($i > 10)
+            break;
     }
     ?>
 

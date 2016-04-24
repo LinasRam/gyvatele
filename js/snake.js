@@ -1,9 +1,6 @@
 var name = prompt("Žaidėjo vardas:");
 
 var
-    /**
-     * Constats
-     */
     COLS = 26,
     ROWS = 26,
     EMPTY = 0,
@@ -17,30 +14,18 @@ var
     KEY_UP    = 38,
     KEY_RIGHT = 39,
     KEY_DOWN  = 40,
-    /**
-     * Game objects
-     */
+
     canvas,	  /* HTMLCanvas */
     ctx,	  /* CanvasRenderingContext2d */
     keystate, /* Object, used for keyboard inputs */
     frames,   /* number, used for animation */
     score;	  /* number, keep track of the player score */
-/**
- * Grid datastructor, usefull in games where the game world is
- * confined in absolute sized chunks of data or information.
- *
- * @type {Object}
- */
+
 grid = {
     width: null,  /* number, the number of columns */
     height: null, /* number, the number of rows */
     _grid: null,  /* Array<any>, data representation */
-    /**
-     * Initiate and fill a c x r grid with the value of d
-     * @param  {any}    d default value to fill with
-     * @param  {number} c number of columns
-     * @param  {number} r number of rows
-     */
+
     init: function(d, c, r) {
         this.width = c;
         this.height = r;
@@ -52,74 +37,40 @@ grid = {
             }
         }
     },
-    /**
-     * Set the value of the grid cell at (x, y)
-     *
-     * @param {any}    val what to set
-     * @param {number} x   the x-coordinate
-     * @param {number} y   the y-coordinate
-     */
+
     set: function(val, x, y) {
         this._grid[x][y] = val;
     },
-    /**
-     * Get the value of the cell at (x, y)
-     *
-     * @param  {number} x the x-coordinate
-     * @param  {number} y the y-coordinate
-     * @return {any}   the value at the cell
-     */
+
     get: function(x, y) {
         return this._grid[x][y];
     }
 }
-/**
- * The snake, works as a queue (FIFO, first in first out) of data
- * with all the current positions in the grid with the snake id
- *
- * @type {Object}
- */
+
 snake = {
     direction: null, /* number, the direction */
     last: null,		 /* Object, pointer to the last element in
      the queue */
     _queue: null,	 /* Array<number>, data representation*/
-    /**
-     * Clears the queue and sets the start position and direction
-     *
-     * @param  {number} d start direction
-     * @param  {number} x start x-coordinate
-     * @param  {number} y start y-coordinate
-     */
+
     init: function(d, x, y) {
         this.direction = d;
         this._queue = [];
         this.insert(x, y);
     },
-    /**
-     * Adds an element to the queue
-     *
-     * @param  {number} x x-coordinate
-     * @param  {number} y y-coordinate
-     */
+
     insert: function(x, y) {
         // unshift prepends an element to an array
         this._queue.unshift({x:x, y:y});
         this.last = this._queue[0];
     },
-    /**
-     * Removes and returns the first element in the queue.
-     *
-     * @return {Object} the first element
-     */
+
     remove: function() {
         // pop returns the last element of an array
         return this._queue.pop();
     }
 };
-/**
- * Set a food id at a random free cell in the grid
- */
+
 function setFood() {
     var empty = [];
     // iterate through the grid and find all empty cells
@@ -134,9 +85,7 @@ function setFood() {
     var randpos = empty[Math.round(Math.random()*(empty.length - 1))];
     grid.set(FRUIT, randpos.x, randpos.y);
 }
-/**
- * Starts the game
- */
+
 function main() {
     // create and initiate the canvas element
     canvas = document.createElement("canvas");
@@ -160,9 +109,7 @@ function main() {
     init();
     loop();
 }
-/**
- * Resets and inits game objects
- */
+
 function init() {
     score = 0;
     grid.init(EMPTY, COLS, ROWS);
@@ -171,9 +118,7 @@ function init() {
     grid.set(SNAKE, sp.x, sp.y);
     setFood();
 }
-/**
- * The game loop function, used for game updates and rendering
- */
+
 function loop() {
     update();
     draw();
@@ -181,9 +126,7 @@ function loop() {
     // first. Runs about 60 frames a second
     window.requestAnimationFrame(loop, canvas);
 }
-/**
- * Updates the game logic
- */
+
 function update() {
     frames++;
     // changing direction of the snake depending on which keys
@@ -226,8 +169,7 @@ function update() {
             0 > ny || ny > grid.height-1 ||
             grid.get(nx, ny) === SNAKE
         ) {
-            //return init();
-            gameOver();
+            return gameOver();
         }
         // check wheter the new position are on the fruit item
         if (grid.get(nx, ny) === FRUIT) {
@@ -246,9 +188,7 @@ function update() {
         snake.insert(nx, ny);
     }
 }
-/**
- * Render the grid to the canvas.
- */
+
 function draw() {
     // calculate tile-width and -height
     var tw = canvas.width/grid.width;
@@ -272,16 +212,16 @@ function draw() {
             ctx.fillRect(x*tw, y*th, tw, th);
         }
     }
-    // changes the fillstyle once more and draws the score
-    // message to the canvas
+
     ctx.fillStyle = "#000";
     ctx.fillText("Taškai: " + score, 10, canvas.height-10);
     ctx.fillText("Žaidėjas: " + name, 70, canvas.height-10);
 }
-// start and run the game
+
 main();
 
 function gameOver(){
-    //alert("Surinkti taškai: " + score);
-    $(location).attr('href', 'savescore.php?name='+name+'&score='+score);
+    alert("Surinkti taškai: " + score);
+    window.location.href = 'savescore.php?name='+name+'&score='+score;
+    throw new Error();
 }

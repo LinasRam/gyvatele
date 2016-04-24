@@ -1,47 +1,5 @@
 <?php
 
-/*$db = new PDO('mysql:host=localhost;dbname=snake', 'root', '');
-
-$stmt = $db->prepare("INSERT INTO scores (name, score) VALUES (:name, :value)");
-
-$name = $_GET['name'];
-$score = $_GET['score'];
-
-$stmt->bindParam(':name', $name);
-$stmt->bindParam(':value', $score);
-
-$stmt->execute();
-
-
-
-
-$last_id = $stmt->lastInsertId();
-
-var_dump($last_id);
-
-die();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    // do something with $row
-}
-
-if($_GET){
-$name = $_GET['name'];
-$score = $_GET['score'];
-}
-
-
-
-    */
-
-
-
-/*if(!$result) {
-	echo mysql_error();
-			die("nesuveike");
-}*/
-
-
 class savescore {
 
 private $score;
